@@ -32,9 +32,8 @@ class SimpleEnumStatemachineConfiguration extends StateMachineConfigurerAdapter<
                 .stateEntry(OrderStates.PAID, new Action<OrderStates, OrderEvents>() {
                     @Override
                     public void execute(StateContext<OrderStates, OrderEvents> stateContext) {
-                        Long orderId = Long.class.cast(stateContext.getExtendedState().getVariables().getOrDefault("orderId", -1L));
-                        log.info("----> Entering PAID state! ");
-                        log.info("Order ID : {} ", orderId);
+                        Long machineId = Long.class.cast(stateContext.getExtendedState().getVariables().getOrDefault("machineId", -1L));
+                        log.info("----> Entering PAID state! with machine : {} ", machineId);
                     }
                 })
                 .state(OrderStates.PAID)
