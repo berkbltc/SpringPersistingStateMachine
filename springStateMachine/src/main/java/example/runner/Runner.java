@@ -85,6 +85,11 @@ class Runner implements ApplicationRunner {
         }
 
 // In-memory persist test
+//        machineId = 77777L;
+//        StateMachine<OrderStates, OrderEvents> machine2;
+//        machine2 = this.factory.getStateMachine(machineId.toString());
+//        machine2.getExtendedState().getVariables().putIfAbsent("orderId", machineId);
+        
 //        persister.persist(machine, machine.getUuid());
 //        persister.persist(machine2, machine2.getUuid());
 //        persister.restore(machine2, machine.getUuid());
