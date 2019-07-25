@@ -4,7 +4,6 @@ import example.enums.OrderEvents;
 import example.enums.OrderStates;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachinePersist;
-
 import java.util.HashMap;
 import java.util.UUID;
 

@@ -3,6 +3,7 @@ package example.runner;
 import example.entity.TransitionContext;
 import example.enums.OrderEvents;
 import example.enums.OrderStates;
+import example.persist.InMemoryPersist;
 import example.repository.ExampleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -12,10 +13,12 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
+import org.springframework.statemachine.persist.DefaultStateMachinePersister;
 import org.springframework.statemachine.persist.StateMachinePersister;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 
 @Slf4j
@@ -38,7 +41,7 @@ class Runner implements ApplicationRunner {
         Long machineId = 12345L;
         StateMachine<OrderStates, OrderEvents> machine;
         machine = this.factory.getStateMachine(machineId.toString());
-        machine.getExtendedState().getVariables().putIfAbsent("orderId", machineId);
+        machine.getExtendedState().getVariables().putIfAbsent("machineId", machineId);
 
         if (exampleRepository.existsById(machine.getId())) {   // StateMachine will continue from current state
             System.out.println("sMachine exists in DB");
@@ -85,17 +88,20 @@ class Runner implements ApplicationRunner {
         }
 
 // In-memory persist test
-//        machineId = 77777L;
-//        StateMachine<OrderStates, OrderEvents> machine2;
-//        machine2 = this.factory.getStateMachine(machineId.toString());
-//        machine2.getExtendedState().getVariables().putIfAbsent("orderId", machineId);
-        
-//        persister.persist(machine, machine.getUuid());
-//        persister.persist(machine2, machine2.getUuid());
-//        persister.restore(machine2, machine.getUuid());
-//        log.info("+++Machine1 was PAID.Machine2 restored from machine1.Now Machine2: " + machine2.getState().getId().name());
-//        machine2.sendEvent(OrderEvents.FULFILL);
-//        log.info("+++Now Machine2: " + machine2.getState().getId().name());
+
+        Long machineId2 = 77777L;
+        StateMachine<OrderStates, OrderEvents> machine2;
+        machine2 = this.factory.getStateMachine(machineId2.toString());
+        machine2.getExtendedState().getVariables().putIfAbsent("machineId", machineId2);
+
+        InMemoryPersist stateMachinePersist = new InMemoryPersist();
+        StateMachinePersister<OrderStates, OrderEvents, UUID> persister = new DefaultStateMachinePersister<>(stateMachinePersist);
+        persister.persist(machine, machine.getUuid());
+        persister.restore(machine2, machine.getUuid());
+
+        log.info("+++Machine1 was PAID.Machine2 restored from machine1.Now Machine2: " + machine2.getState().getId().name());
+        machine2.sendEvent(OrderEvents.FULFILL);
+        log.info("+++Now Machine2: " + machine2.getState().getId().name());
 
     }
 }
