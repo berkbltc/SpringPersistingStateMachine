@@ -1,3 +1,3 @@
 # SpringStateMachine 
 Implementations of Persisting State Machines 
-(In-memory + with mariaDB) with Spring State Machine Framework
+(In-memory + with mariaDB) using Spring State Machine Framework
