@@ -3,7 +3,6 @@ package example.runner;
 import example.entity.TransitionContext;
 import example.enums.OrderEvents;
 import example.enums.OrderStates;
-import example.persist.InMemoryPersist;
 import example.repository.ExampleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -94,7 +93,6 @@ class Runner implements ApplicationRunner {
         machine2 = this.factory.getStateMachine(machineId2.toString());
         machine2.getExtendedState().getVariables().putIfAbsent("machineId", machineId2);
 
-        InMemoryPersist stateMachinePersist = new InMemoryPersist();
         StateMachinePersister<OrderStates, OrderEvents, UUID> persister = new DefaultStateMachinePersister<>(stateMachinePersist);
         persister.persist(machine, machine.getUuid());
         persister.restore(machine2, machine.getUuid());
